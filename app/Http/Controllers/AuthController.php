@@ -8,16 +8,12 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Routing\Controllers\Middleware;
 
 class AuthController extends Controller
 {
     public function __construct()
     {
-        // Middleware()
-        // Middleware('auth:api', ['except' => ['login','register']]);
-        // $this->middleware('auth:api')->except(['login', 'register']);
-        // $this->Middleware('auth:api', ['except' => ['login','register']]);
+        $this->middleware('auth:api')->except(['login', 'register']);
     }
 
     public function login(Request $request)
@@ -27,7 +23,7 @@ class AuthController extends Controller
         //     'password' => 'required|string',
         // ]);
         $validator = Validator::make($request->all() ,[
-            'email' => 'email',
+            'email' => 'required|email',
             'password' => ['required' , Password::min(8)]
 
         ]);
@@ -61,7 +57,7 @@ class AuthController extends Controller
     public function register(Request $request){
         $validator = Validator::make($request->all() ,[
             'name' => 'required|min:6',
-            'email' => 'email|unique:users',
+            'email' => 'required|email|unique:users',
             'password' => ['required' , Password::min(8)]
         ]);
 

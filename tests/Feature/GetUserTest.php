@@ -14,6 +14,13 @@ class GetUserTest extends TestCase
     /**
      * A basic feature test example.
      */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->loginUser();
+    }
+
     public function test_get_user_success(): void
     {
         $users = User::factory()->count(3)->create();
@@ -21,7 +28,7 @@ class GetUserTest extends TestCase
         $user_id = (int) $users->first()->id;
 
         // $user_id = User::find(1);
-        $response = $this->get('/api/user/' . $user_id);
+        $response = $this->get('/api/user/' . $user_id, ["Authorization" => $this->token]);
 
         $response->assertStatus(200);
 
@@ -36,7 +43,7 @@ class GetUserTest extends TestCase
 
     public function test_get_user_not_found(): void
     {
-        $response = $this->get('/api/user/' . 1);
+        $response = $this->get('/api/user/' . 1, ["Authorization" => $this->token]);
         $response->assertStatus(404);
 
     }

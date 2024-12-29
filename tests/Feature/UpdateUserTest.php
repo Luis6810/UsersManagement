@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 use App\Models\User;
 
@@ -13,12 +14,20 @@ class UpdateUserTest extends TestCase
     /**
      * A basic feature test example.
      */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->loginUser();
+    }
     public function test_update_user(): void
     {
         //Arrange
-        $users = User::factory()->count(3)->create();
+        // $users = User::factory()->count(3)->create();
 
-        $user_id = $users->first()->id;
+
+        // $token = $user->getJWTIdentifier();
+        $user_id = $this->user->id;
 
         $data = [
             'name' => 'Romeo Santos',
@@ -26,7 +35,7 @@ class UpdateUserTest extends TestCase
             'password' => 'cvavadfd',
         ];
         //Act
-        $response = $this->put('/api/user/'. $user_id ,$data);
+        $response = $this->put('/api/user/'. $user_id ,$data,["Authorization" => $this->token]);
 
         //Assert
         $response->assertStatus(200);
@@ -49,7 +58,7 @@ class UpdateUserTest extends TestCase
             'password' => 'cvavadfd',
         ];
         //Act
-        $response = $this->put('/api/user/'. 1 ,$data);
+        $response = $this->put('/api/user/'. 100 ,$data,["Authorization" => $this->token]);
         //Assert
         $response->assertStatus(404);
 
@@ -58,9 +67,8 @@ class UpdateUserTest extends TestCase
     public function test_update_user_validation_error(): void
     {
         //Arrange
-        $users = User::factory()->count(3)->create();
 
-        $user_id = $users->first()->id;
+        $user_id = $this->user->id;
 
         $data = [
             'name' => 'l',
@@ -68,7 +76,7 @@ class UpdateUserTest extends TestCase
             'password' => 'cd',
         ];
         //Act
-        $response = $this->put('/api/user/'. $user_id ,$data);
+        $response = $this->put('/api/user/'. $user_id ,$data,["Authorization" => $this->token]);
 
         //Assert
         $response->assertStatus(422);

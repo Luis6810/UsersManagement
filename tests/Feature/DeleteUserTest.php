@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class DeleteUserTest extends TestCase
 {
@@ -13,6 +14,13 @@ class DeleteUserTest extends TestCase
     /**
      * A basic feature test example.
      */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->loginUser();
+    }
+
     public function test_delete_user_success(): void
     {
         $users = User::factory()->count(3)->create();
@@ -21,7 +29,7 @@ class DeleteUserTest extends TestCase
 
 
         // $user_id = User::find(1);
-        $response = $this->delete('/api/user/' . $user_id);
+        $response = $this->delete('/api/user/' . $user_id, ["Authorization" => $this->token]);
 
         $response->assertStatus(204);
     }
@@ -29,7 +37,7 @@ class DeleteUserTest extends TestCase
     public function test_delete_user_not_found():void
     {
         //Act
-        $response = $this->delete('/api/user/' . 1);
+        $response = $this->delete('/api/user/' . 1,["Authorization" => $this->token]);
         //Assert
         $response->assertStatus(404);
 

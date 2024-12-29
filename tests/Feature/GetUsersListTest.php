@@ -12,13 +12,18 @@ class GetUsersListTest extends TestCase
     /**
      * A basic feature test example.
      */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->loginUser();
+    }
 
     public function test_get_users_sucess(): void
     {
         //Arrange
-        $posts = User::factory()->count(3)->create();
 
-        $response = $this->get('/api/users');
+        $response = $this->get('/api/users',["Authorization" => $this->token]);
         // $response->assertExactJson();
         // print(type($response));
         $response->assertStatus(200)->assertJsonCount(3)->assertJsonStructure([

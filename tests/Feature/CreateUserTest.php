@@ -13,6 +13,12 @@ class CreateUserTest extends TestCase
     /**
      * A basic feature test example.
      */
+     protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->loginUser();
+    }
     public function test_create_user_success(): void
     {
         //Arrange
@@ -22,7 +28,7 @@ class CreateUserTest extends TestCase
             'password' => 'cvavadfd',
         ];
 
-        $response = $this->post('/api/user',$data);
+        $response = $this->post('/api/user',$data,["Authorization" => $this->token]);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('users',
@@ -43,7 +49,7 @@ class CreateUserTest extends TestCase
 
         ];
 
-        $response = $this->post('/api/user',$data);
+        $response = $this->post('/api/user',$data,["Authorization" => $this->token]);
 
         $response->assertStatus(422);
 

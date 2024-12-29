@@ -7,13 +7,17 @@ use App\Utils\Error;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Validator;
-use LDAP\Result;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     public function index()
     {
         $users = User::all();
@@ -28,7 +32,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all() ,[
             'name' => 'required|min:6',
-            'email' => 'email',
+            'email' => 'required|email|unique:users',
             'password' => ['required' , Password::min(8)]
         ]);
 
@@ -75,7 +79,7 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all() ,[
             'name' => 'required|min:6',
-            'email' => 'email',
+            'email' => 'required|email|unique:users',
             'password' => ['required' , Password::min(8)]
         ]);
 
