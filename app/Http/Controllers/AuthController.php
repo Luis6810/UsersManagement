@@ -38,9 +38,11 @@ class AuthController extends Controller
         if (!$token) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Unauthorized',
+                'message' => 'Invalid credentials',
             ], 401);
         }
+
+        // return redirect("dashboard")->withHeaders(["Authorization" => $token]);
 
         $user = Auth::user();
         return response()->json([

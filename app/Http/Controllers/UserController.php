@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Utils\Error;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Validator;
@@ -79,10 +80,9 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all() ,[
             'name' => 'required|min:6',
-            'email' => 'required|email|unique:users',
+            'email' => ['required','email',Rule::unique('users')->ignore($id), ],
             'password' => ['required' , Password::min(8)]
         ]);
-
         if ($validator->fails())
         {
             return response()->json(["errors" => $validator->errors()],422);
